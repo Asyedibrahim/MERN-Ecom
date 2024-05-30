@@ -5,6 +5,9 @@ import Header from './components/Header';
 import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
+import Products from './pages/Products';
+import Cart from './pages/Cart';
+import Wishlist from './pages/Wishlist';
 
 export default function App() {
   return (
@@ -18,6 +21,12 @@ export default function App() {
         <Route path='/sign-in' element={<SignIn />}></Route>
 
         <Route path='/sign-up' element={<SignUp />}></Route>
+        
+        <Route path='/products' element={<Products />}></Route>
+
+        <Route path='/cart' element={<Cart />}></Route>
+
+        <Route path='/wishlist' element={<Wishlist />}></Route>
 
         <Route path='/dashboard' element={<Dashboard />}></Route>
       </Routes>
