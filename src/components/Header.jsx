@@ -9,7 +9,7 @@ export default function Header() {
 
   return (
     
-    <Navbar className='border-b-2 shadow-md bg-[#ede8f5]'>
+    <Navbar className='border-b-2 shadow-lg bg-[#ede8f5]'>
         <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold '>
             <span className='font-bold text-[#3d52a0] text-xl'>Innovitron</span>
         </Link>
@@ -27,7 +27,7 @@ export default function Header() {
         </Link>
 
         <Link to='/sign-in' className='md:order-2'>
-            <button className='bg-[#3d52a0] py-2 px-3 rounded-lg text-white text-md hover:bg-[#455aa5]'>Sign In</button>
+            <button className='bg-[#3d52a0] py-2 px-3 rounded-lg text-white text-md hover:bg-[#4f62aa]'>Sign In</button>
         </Link>
         
         <Navbar.Toggle/>
