@@ -6,14 +6,14 @@ import jwt from 'jsonwebtoken'
 
 export const signUp = async (req, res, next) => {
     try {
-        const { username, email, password } = req.body;
+        const { email, password } = req.body;
 
-        if (!username || !email || !password || username === '' || email === '' || password === '') {
+        if (!email || !password || email === '' || password === '') {
             next(errorHandler(400, 'All fields are required'))
         }
     
         const hashedPassword = bcryptjs.hashSync(password, 10);
-        const newUser = new User({ username, email, password: hashedPassword });
+        const newUser = new User({ email, password: hashedPassword });
         await newUser.save()
     
         const {password: pass, ...rest} = newUser._doc;
@@ -22,7 +22,7 @@ export const signUp = async (req, res, next) => {
         
     } catch (error) {
         if (error.code === 11000) {
-            next(errorHandler(403, 'Username or email already exists!'))
+            next(errorHandler(403, 'Email already exists!'))
         } else {
             next(error)
         }
@@ -69,7 +69,6 @@ export const google = async (req, res, next) => {
             const generatePassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatePassword, 10);
             const newUser = new User({ 
-                username: req.body.username, 
                 email: req.body.email, 
                 password: hashedPassword 
             });

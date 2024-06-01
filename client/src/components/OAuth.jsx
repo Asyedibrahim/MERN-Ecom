@@ -14,10 +14,10 @@ export default function OAuth() {
   const handleGoogleClick = async () => {
     try {
       dispatch(signInStart());
-      const provider = new GoogleAuthProvider()
-      const auth = getAuth(app)
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
   
       const res = await fetch('/api/auth/google', {
         method: 'POST',
@@ -31,10 +31,7 @@ export default function OAuth() {
       });
 
       const data = await res.json();
-      if (!res.ok) {
-        dispatch(signInFailure(data.message));
-        return;
-      }
+      
       if (res.ok) {
         dispatch(signInSuccess(data));
         navigate('/');

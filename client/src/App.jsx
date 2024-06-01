@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
+import PrivateRoute from './components/PrivateRoute';
 
 export default function App() {
   return (
@@ -28,7 +29,10 @@ export default function App() {
 
         <Route path='/wishlist' element={<Wishlist />}></Route>
 
-        <Route path='/dashboard' element={<Dashboard />}></Route>
+
+        <Route element={<PrivateRoute />}>
+          <Route path='/dashboard' element={<Dashboard />}></Route>
+        </Route>
       </Routes>
 
     </BrowserRouter>
