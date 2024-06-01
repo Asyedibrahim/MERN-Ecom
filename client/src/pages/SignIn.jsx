@@ -1,10 +1,10 @@
-import { FcGoogle } from 'react-icons/fc'
 import b1 from '../assets/images/b1.jpeg';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice.js';
 import { Spinner } from 'flowbite-react';
+import OAuth from '../components/OAuth.jsx';
 
 
 export default function SignIn() {
@@ -87,8 +87,7 @@ export default function SignIn() {
             <hr className='border-gray-500'/>
           </div>
 
-
-          <button className='bg-white border p-3 w-full flex items-center justify-center gap-1 font-semibold rounded-xl mt-8 shadow-md '><FcGoogle />Continue with Google</button>
+          <OAuth />
         </div>
 
       </div>

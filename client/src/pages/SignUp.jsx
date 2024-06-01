@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import b1 from '../assets/images/b1.jpeg';
-import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from 'react-router-dom'
 import { Spinner } from 'flowbite-react';
+import OAuth from '../components/OAuth';
 
 
 export default function SignUp() {
@@ -56,7 +56,7 @@ export default function SignUp() {
         <div className="sm:w-full px-2 md:px-12">
 
           <h3 className='text-[#3d52a0] text-2xl font-bold'>Register</h3>
-          <p className='mt-5 '>if you already have an account, <Link to='/sign-in' className='text-blue-700 font-semibold hover:underline cursor-pointer whitespace-nowrap'>Log in</Link></p>
+          <p className='mt-5 '>if you already have an account, <Link to='/sign-in' className='text-blue-700 font-semibold hover:underline cursor-pointer whitespace-nowrap'>Login</Link></p>
 
           <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmit}>
             <input type="text" id='username' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter username' onChange={handleChange}/>
@@ -82,8 +82,8 @@ export default function SignUp() {
             <hr className='border-gray-500'/>
           </div>
 
+          <OAuth/>
 
-          <button className='bg-white border p-3 w-full flex items-center justify-center gap-1 font-semibold rounded-xl mt-8 shadow-md '><FcGoogle />Continue with Google</button>
         </div>
 
         <div className="w-full hidden md:block">
