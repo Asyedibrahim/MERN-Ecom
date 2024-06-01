@@ -68,7 +68,7 @@ export default function SignIn() {
 
             <input type="password" id='password' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter password' onChange={handleChange}/>
 
-            <button type='submit' className='rounded-xl py-2 bg-[#3d52a0] text-white hover:bg-[#4f62aa] font-semibold'>
+            <button type='submit' disabled={loading} className='rounded-xl py-2 bg-[#3d52a0] text-white hover:bg-[#4f62aa] disabled:bg-[#4f62aa] font-semibold'>
               {loading ? (
                 <>
                   <Spinner size='sm'/>

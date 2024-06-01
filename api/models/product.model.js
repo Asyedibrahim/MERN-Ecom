@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Category from "./category.model.js";
 
 const productSchema = new mongoose.Schema({
     userId: {
@@ -24,6 +25,11 @@ const productSchema = new mongoose.Schema({
     discountPrice: {
         type: Number,
         required: true,
+    },
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
     }
 }, { timestamps: true });
 
