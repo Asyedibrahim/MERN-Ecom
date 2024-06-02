@@ -6,19 +6,23 @@ export const createCategory = async (req, res, next) => {
         return next(errorHandler(403, 'You are not allowed to create category'));
     }
 
-    const {name, description} = req.body;
+    const {name} = req.body;
 
-    if (!name || !description || name === '' || description === '') {
-        return next(errorHandler(400, 'Name and Description are required'))
+    if (!name || name === '') {
+        return next(errorHandler(400, 'Name is required'))
     }
 
     try {
-        const newCategory = new Category({name, description});
+        const newCategory = new Category({name});
         await newCategory.save();
         res.status(201).json(newCategory);
         
     } catch (error) {
-        next(error)
+        if (error.code === 11000) {
+            return next(errorHandler(400, 'Category already exists!'));
+        } else {
+            next(error)
+        }
     }
 };
 
@@ -30,6 +34,36 @@ export const getCategory = async (req, res, next) => {
     try {
         const categories = await Category.find({categoryId: req.body.categoryId});
         res.status(200).json(categories);
+    } catch (error) {
+        next(error)
+    }
+};
+
+
+export const deleteCategory = async (req, res, next) => {
+    const category = await Category.findById(req.params.categoryId);
+    if (!category) {
+        return next(errorHandler(404, 'Category not found!'));
+    }
+    if (!req.user.isAdmin) {
+        return next(errorHandler(403, 'You are not allowed to get category'));
+    }
+
+    try {
+        await Category.findByIdAndDelete(req.params.categoryId);
+        res.status(200).json('Category has been deleted');
+    } catch (error) {
+        next(error)
+    }
+};
+
+export const editCategory = async (req, res, next) => {
+    if (!req.user.isAdmin) {
+        return next(errorHandler(403, 'You are not allowed to edit this category!'))
+    }
+    
+    try {
+        
     } catch (error) {
         next(error)
     }

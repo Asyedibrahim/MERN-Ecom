@@ -33,7 +33,7 @@ export default function Dashboard() {
         <DashSidebar />
       </div>
 
-      <div className='max-w-4xl sm:ms-10'>
+      <div className='max-w-6xl sm:ms-10'>
         {/* Profile... */}
         {tab === 'profile' && <DashProfile/> }
         {/* Address... */}
