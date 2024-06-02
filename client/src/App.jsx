@@ -29,10 +29,10 @@ export default function App() {
 
         <Route path='/wishlist' element={<Wishlist />}></Route>
 
-
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />}></Route>
         </Route>
+
       </Routes>
 
     </BrowserRouter>
