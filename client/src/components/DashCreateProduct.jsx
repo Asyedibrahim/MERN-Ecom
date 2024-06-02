@@ -43,7 +43,7 @@ export default function DashCreateProduct() {
     }
 
   return (
-    <div className='max-w-5xl mx-auto p-3 w-full mt-7'>
+    <div className='max-w-4xl p-3 w-full mt-7'>
         <h1 className='text-2xl font-semibold'>Create Product</h1>
         <form className="flex flex-col lg:flex-row lg:gap-10">
             <div className="my-8">

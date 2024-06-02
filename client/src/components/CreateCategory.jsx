@@ -1,8 +1,6 @@
-import { Label, Spinner, TextInput, Textarea } from 'flowbite-react';
+import { Label, Spinner, Table, TextInput, Textarea } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MdDelete } from "react-icons/md";
-import { AiFillEdit } from "react-icons/ai";
 import Swal from 'sweetalert2';
 
 
@@ -81,34 +79,40 @@ export default function CreateCategory() {
     }
   };
 
-  const handleClick = async (categoryName) => {
-    const { value: formValues } = await Swal.fire({
-      title: "Edit Category",
-      html: `
-        <input id="name" class="swal2-input" placeholder="Edit Category" value=${categoryName}>
-      `,
-      focusConfirm: true,
-      preConfirm: () => {
-        return [
-          document.getElementById("swal-input1").value
-        ];
+    const handleClick = async (categoryName, categoryId) => {
+
+      const { value: formValue } = await Swal.fire({
+        title: "Edit Category",
+        input: "text",
+        inputValue: categoryName,
+        inputPlaceholder: "Enter Category"
+      });
+      if (formValue) {
+        const res = await fetch(`/api/category/edit/${categoryId}`,{
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({name: formValue})
+        });
+        
+        if (res.ok) {
+          setCategories((prev) => prev.map((category) => category._id === categoryId ? {...category, name: formValue} : category))
+        }
       }
-    });
-    if (formValues) {
-      Swal.fire(JSON.stringify(formValues));
     }
-  }
+  
 
   return (
-    <div className='max-w-5xl mx-auto p-3 w-full mt-7'>
-        <h1 className='text-3xl font-semibold text-slate-700'>Create Category</h1>
+    <div className='mx-auto p-3 mt-7'>
+        <h1 className='text-2xl font-semibold '>Create Category</h1>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
 
-        <form className='my-8 w-full flex gap-5 items-center' onSubmit={handleSubmit} autoComplete='off'>
+        <form className='my-8 flex gap-5 items-center' onSubmit={handleSubmit} autoComplete='off'>
           <div className="flex-1">
             <Label>Product Name : </Label>
-            <TextInput type='text' placeholder='Eg. Electronics' id='name' required onChange={handleChange}/>
+            <TextInput type='text' placeholder='Eg. Electronics' id='name' required onChange={handleChange} className='w-full'/>
           </div>
           <div className="flex-1">
             <button type='submit' disabled={loading} className='rounded-lg p-2 bg-[#3d52a0] text-white hover:bg-[#4f62aa] disabled:bg-[#4f62aa] font-semibold w-full mt-6'>
@@ -117,32 +121,39 @@ export default function CreateCategory() {
                   <Spinner size='sm'/>
                   <span className='pl-3'>Creating...</span>
                 </> 
-              ) : 'Create Product'
+              ) : 'Create Category'
               }
             </button>
 
           </div>
           {error && <p className='mt-3 text-red-600'>{error}</p>}
         </form>
-        
+  
+        <h2 className='text-slate-700 font-semibold text-xl mt-5'>Category Lists</h2>
 
-        <div className="lg:mt-5 border p-5 w-full lg:w-[500px] shadow-lg">
-          <h2 className='text-slate-700 font-semibold text-xl'>Category Lists</h2>
-          <ul className='p-3 mt-2'>
-            {categories && categories.length > 0 ? categories.map((category) => (
-              <li>
-                <div className='flex justify-between border-b p-2'>
-                  <span className='w-40'>{category.name}</span>
-                  <span className='text-green-600 font-semibold cursor-pointer flex items-center' onClick={() => handleClick(category.name)}><AiFillEdit />&nbsp;Edit</span>
-                  <span className='text-red-600 font-semibold cursor-pointer flex items-center' onClick={() => handleDelete(category._id)}><MdDelete /> Delete</span>
-                </div>
-            </li>
-            )) : <p className='text-center text-xl mt-3 text-slate-500'> No category available!</p>}
-          </ul>
+        <div className='overflow-x-auto mt-5 border border-gray-300 shadow-md rounded-md'>
+          <table className='min-w-full divide-y divide-gray-200'>
+          <thead className='bg-gray-50'>
+            <tr>
+              <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider'>Date created</th>
+              <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider'>Category Name</th>
+              <th className='px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider' colSpan='2'>Actions</th>
+            </tr>
+          </thead>
+          <tbody className='bg-white divide-y divide-gray-200'>
+            {categories.map((category) => (
+              <tr key={category._id}>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-700'>{new Date(category.createdAt).toLocaleDateString()}</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-700'>{category.name}</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold cursor-pointer' onClick={() => handleClick(category.name, category._id)}>Edit</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold cursor-pointer' onClick={() => handleDelete(category._id)}>Delete</td>
+              </tr>
+            ))}
+          </tbody>
+          </table>
         </div>
 
       </div>
-        
     </div>
   )
 }

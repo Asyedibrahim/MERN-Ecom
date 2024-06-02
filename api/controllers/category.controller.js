@@ -58,12 +58,19 @@ export const deleteCategory = async (req, res, next) => {
 };
 
 export const editCategory = async (req, res, next) => {
+    const category = await Category.findById(req.params.categoryId);
+    if (!category) {
+        return next(errorHandler(404, 'Category not found!'));
+    }
     if (!req.user.isAdmin) {
         return next(errorHandler(403, 'You are not allowed to edit this category!'))
     }
     
     try {
-        
+        const updatedCategory = await Category.findByIdAndUpdate(req.params.categoryId, {
+            name: req.body.name
+        }, { new: true });
+        res.status(200).json(updatedCategory);
     } catch (error) {
         next(error)
     }
