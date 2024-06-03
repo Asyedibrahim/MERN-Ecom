@@ -143,8 +143,8 @@ export default function CreateCategory() {
           <tbody className='bg-white divide-y divide-gray-200'>
             {categories.map((category) => (
               <tr key={category._id}>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-700'>{new Date(category.createdAt).toLocaleDateString()}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-700'>{category.name}</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm'>{new Date(category.createdAt).toLocaleDateString()}</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm'>{category.name}</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold cursor-pointer' onClick={() => handleClick(category.name, category._id)}>Edit</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold cursor-pointer' onClick={() => handleDelete(category._id)}>Delete</td>
               </tr>
