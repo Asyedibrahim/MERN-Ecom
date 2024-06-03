@@ -171,7 +171,7 @@ export default function DashCreateProduct() {
                         <Select onChange={(e) => setFormData({...formData, categoryId: e.target.value})}>
                             <option>Select a category</option>
                             {categories.map((category) => (
-                                <option key={category._id} value={category._id}> {category.name} </option>
+                                <option key={category._id} value={category._id} className='bg-gray-50'> {category.name} </option>
                             ))}
                         </Select>
                     </div>

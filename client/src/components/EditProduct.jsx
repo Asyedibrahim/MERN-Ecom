@@ -56,7 +56,6 @@ export default function EditProduct() {
         }
         fetchProduct();
       }, [location.search]);
-      console.log(formData._id);
 
 
     const handleChange = (e) => {
@@ -86,8 +85,8 @@ export default function EditProduct() {
 
     const handleImageSubmit = () => {
         if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
-            const promises = [];
             setLoading(true);
+            const promises = [];
 
             for (let i = 0; i < files.length; i++) {
                 promises.push(storeImage(files[i]));
@@ -104,7 +103,6 @@ export default function EditProduct() {
             setLoading(false);
         } else if (files.length == 0) {
             console.log('You must upload atleast one image');
-            setLoading(false);
         } else {
             console.log('You can only upload 6 image per listing');
             setLoading(false);
@@ -173,7 +171,7 @@ export default function EditProduct() {
                 return;
             }
             setLoading(false);
-            navigate(`/products/${data._id}`);
+            navigate(`/products/${data._id}`, { replace: true });
             console.log('created');
         } catch (error) {
             setLoading(false);

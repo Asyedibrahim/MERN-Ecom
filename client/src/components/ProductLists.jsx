@@ -37,13 +37,14 @@ export default function ProductLists() {
   }
 
   return (
-    <div className='max-w-2xl p-3'>
+    <div className='md:max-w-lg lg:max-w-2xl p-3'>
       <h1 className='text-2xl font-semibold mt-7'>Product Lists</h1>
-      <div className='w-full mt-5 overflow-x-auto border border-gray-300 shadow-md rounded-md'>
+      <div className=' max-h-[400px]  w-full mt-5 overflow-auto border border-gray-300 shadow-md rounded-md'>
        
-      <table className='min-w-full divide-y divide-gray-200 table-fixed'>
+      <table className='min-w-full divide-y divide-gray-200 table-fixed overflow-auto'>
       <thead className='bg-[#4f62aa]'>
         <tr>
+          <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>No</th>
           <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Date created</th>
           <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Product Name</th>
           <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Category</th>
@@ -51,8 +52,9 @@ export default function ProductLists() {
         </tr>
       </thead>
       <tbody className='bg-white divide-y divide-gray-200'>
-        {products.map((product) => (
+        {products.map((product, index) => (
           <tr key={product._id} className='hover:bg-[#ede8f5]'>
+            <td className='px-6 py-4 whitespace-nowrap text-sm'>{index + 1}.</td>
             <td className='px-6 py-4 whitespace-nowrap text-sm'>{new Date(product.createdAt).toLocaleDateString()}</td>
             <td className='px-6 py-4 whitespace-nowrap text-sm'>{product.name}</td>
             <td className='px-6 py-4 whitespace-nowrap text-sm'>{product.categoryId?.name || 'Uncategorized'}</td>
