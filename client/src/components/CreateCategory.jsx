@@ -133,16 +133,16 @@ export default function CreateCategory() {
 
         <div className='overflow-x-auto mt-5 border border-gray-300 shadow-md rounded-md'>
           <table className='min-w-full divide-y divide-gray-200'>
-          <thead className='bg-gray-50'>
+          <thead className='bg-[#4f62aa]'>
             <tr>
-              <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider'>Date created</th>
-              <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase tracking-wider'>Category Name</th>
-              <th className='px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase tracking-wider' colSpan='2'>Actions</th>
+              <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Date created</th>
+              <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Category Name</th>
+              <th className='px-6 py-3 text-center text-sm font-medium text-white uppercase tracking-wider' colSpan='2'>Actions</th>
             </tr>
           </thead>
           <tbody className='bg-white divide-y divide-gray-200'>
             {categories.map((category) => (
-              <tr key={category._id}>
+              <tr key={category._id} className='hover:bg-[#ede8f5]'>
                 <td className='px-6 py-4 whitespace-nowrap text-sm'>{new Date(category.createdAt).toLocaleDateString()}</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm'>{category.name}</td>
                 <td className='px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold cursor-pointer' onClick={() => handleClick(category.name, category._id)}>Edit</td>

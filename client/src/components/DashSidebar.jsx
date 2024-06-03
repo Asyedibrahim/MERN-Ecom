@@ -77,7 +77,12 @@ export default function DashSidebar() {
                     </Link>
                     <Link to={'/dashboard?tab=createCategory'} >
                         <Sidebar.Item  active={tab === 'createCategory'} as={'div'} className={`${tab === 'createCategory' && 'bg-[#3d52a0] text-white hover:bg-[#3d52a0]'} font-semibold`}>
-                            Category
+                            Manage Category
+                        </Sidebar.Item>
+                    </Link>
+                    <Link to={'/dashboard?tab=productLists'} >
+                        <Sidebar.Item  active={tab === 'productLists'} as={'div'} className={`${tab === 'productLists' && 'bg-[#3d52a0] text-white hover:bg-[#3d52a0]'} font-semibold`}>
+                            Product Lists
                         </Sidebar.Item>
                     </Link>
                 </Sidebar.ItemGroup>

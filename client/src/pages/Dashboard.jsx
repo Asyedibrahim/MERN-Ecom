@@ -6,6 +6,8 @@ import DashAddress from '../components/DashAddress';
 import DashCreateProduct from '../components/DashCreateProduct';
 import CreateCategory from '../components/CreateCategory';
 import { useSelector } from 'react-redux';
+import ProductLists from '../components/ProductLists';
+import EditProduct from '../components/EditProduct';
 
 export default function Dashboard() {
 
@@ -23,8 +25,6 @@ export default function Dashboard() {
 
   }, [location.search]);
 
-  const isAdminTab = tab === 'createProduct' || tab === 'createCategory';
-
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
 
@@ -33,20 +33,24 @@ export default function Dashboard() {
         <DashSidebar />
       </div>
 
-      <div className='max-w-6xl sm:ms-10'>
+      <div className='max-w-6xl lg:ms-10'>
         {/* Profile... */}
         {tab === 'profile' && <DashProfile/> }
         {/* Address... */}
         {tab === 'address' && <DashAddress/> }
         {/* Create Product... */}
         {tab === 'createProduct' && currentUser.isAdmin && <DashCreateProduct />}
-        {/* Create Category */}
+        {/* Create Category... */}
         {tab === 'createCategory' && currentUser.isAdmin && <CreateCategory />}
+        {/* Create Product... */}
+        {tab === 'productLists' && currentUser.isAdmin && <ProductLists />}
+        {/* Edit Product... */}
+        {tab.startsWith('editProduct/') && currentUser.isAdmin && <EditProduct productId={tab.split('/')[1]} />}
 
         {!tab && ( <DashProfile/> )}
         
-        {!currentUser.isAdmin && (tab === 'createProduct' || tab === 'createCategory') && (
-          <div>You do not have access to this section</div>
+        {!currentUser.isAdmin && (tab === 'createProduct' || tab === 'createCategory' || tab === 'productLists' || tab === 'editProduct') && (
+          <div className='text-2xl p-5 text-slate-700'>You do not have access to this section!</div>
         )}
 
       </div>
