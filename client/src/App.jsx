@@ -9,6 +9,7 @@ import Products from './pages/Products';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import PrivateRoute from './components/PrivateRoute';
+import Product from './pages/Product';
 
 export default function App() {
   return (
@@ -32,6 +33,8 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />}></Route>
         </Route>
+
+        <Route path='/product/:productId' element={<Product />}></Route>
 
       </Routes>
 

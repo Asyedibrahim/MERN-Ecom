@@ -104,7 +104,7 @@ export default function CreateCategory() {
   
 
   return (
-    <div className='mx-auto p-3 mt-7'>
+    <div className='max-w-3xl p-3 md:ml-5 mt-7'>
         <h1 className='text-2xl font-semibold '>Create Category</h1>
 
       <div className="flex flex-col w-full">

@@ -171,8 +171,8 @@ export default function EditProduct() {
                 return;
             }
             setLoading(false);
-            navigate(`/products/${data._id}`, { replace: true });
-            console.log('created');
+            navigate(`/product/${data._id}`, { replace: true });
+            console.log('Updated');
         } catch (error) {
             setLoading(false);
             console.log(error.message);

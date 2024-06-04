@@ -33,7 +33,6 @@ export default function Dashboard() {
         <DashSidebar />
       </div>
 
-      <div className='max-w-6xl lg:ms-10'>
         {/* Profile... */}
         {tab === 'profile' && <DashProfile/> }
         {/* Address... */}
@@ -53,8 +52,6 @@ export default function Dashboard() {
           <div className='text-2xl p-5 text-slate-700'>You do not have access to this section!</div>
         )}
 
-      </div>
-      
     </div>
   )
 }

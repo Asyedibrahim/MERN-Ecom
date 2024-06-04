@@ -68,16 +68,10 @@ export const editProduct = async (req, res, next) => {
 
 export const getProducts = async (req, res, next) => {
     try {
-        if (!req.user.isAdmin) {
-            return next(errorHandler(403, 'You are not allowed to see products'));
-        }
-        try {
-            const getProduct = await Product.findById(req.params.productId).populate('categoryId', 'name');
-            res.status(200).json(getProduct);
-        } catch (error) {
-            next(error)
-        }
+        const getProduct = await Product.findById(req.params.productId).populate('categoryId', 'name');
+        res.status(200).json(getProduct);
     } catch (error) {
         next(error)
     }
+    
 };

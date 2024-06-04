@@ -2,3 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Scrollbar Styles */
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #e0e0e0; /* Track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #8b8b8b; /* Thumb color */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid #e0e0e0; /* Adds a border around the scrollbar thumb */
+}
+
+/* Ensuring the scroll bar appears at the bottom */
+.custom-scrollbar {
+    display: flex;
+    align-items: center;
+}
+

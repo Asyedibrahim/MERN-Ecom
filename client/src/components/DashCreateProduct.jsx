@@ -151,7 +151,7 @@ export default function DashCreateProduct() {
                 return;
             }
             setLoading(false);
-            navigate(`/products/${data._id}`);
+            navigate(`/product/${data._id}`);
             console.log('created');
         } catch (error) {
             setLoading(false);
@@ -160,7 +160,7 @@ export default function DashCreateProduct() {
     }
 
   return (
-    <div className='max-w-md p-3 mt-7'>
+    <div className='max-w-3xl md:ml-5 p-3 mt-7'>
         <h1 className='text-2xl font-semibold'>Create Product</h1>
         <form className="lg:gap-10" onSubmit={handleSubmit} autoComplete='off'>
             <div className="my-8">
@@ -207,7 +207,7 @@ export default function DashCreateProduct() {
             </div>
 
             <div className="lg:my-7">
-                <Label>Images : The first image will be the cover photo (max 6)</Label>
+                <Label>Images : The first image will be the cover photo (max 5)</Label>
                 <div className="flex flex-wrap gap-1 m-2">
                     {formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
                         <div key={url} className="relative">
