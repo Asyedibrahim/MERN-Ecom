@@ -3,9 +3,10 @@ import { persistReducer } from 'redux-persist';
 import persistStore from 'redux-persist/es/persistStore';
 import storage from 'redux-persist/lib/storage';
 import userReducer from '../redux/user/userSlice.js'
+import cartReducer from '../redux/user/cartSlice.js'
 
 
-const rootReducer = combineReducers({user: userReducer})
+const rootReducer = combineReducers({user: userReducer, cart: cartReducer})
 
 const persistConfig = {
     key: 'root',

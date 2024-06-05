@@ -3,13 +3,40 @@ import { Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaHeadphones, FaHeart, FaHome, FaShoppingCart } from "react-icons/fa";
 import { MdAccountCircle } from "react-icons/md";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { setCartItems } from '../redux/user/cartSlice';
 
 
 export default function Header() {
 
     const path = useLocation().pathname;
     const { currentUser } = useSelector((state) => state.user);
+    
+    const cartItems = useSelector((state) => state.cart.items); 
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchCart = async () => {
+          try {
+            const res = await fetch(`/api/cart/${currentUser._id}`);
+            const data = await res.json();
+            if (data.success === false) {
+              console.log(data.message);
+              return;
+            }
+            if (res.ok) {
+              dispatch(setCartItems(data));
+            }
+          } catch (error) {
+            console.log(error.message);
+          }
+        }
+        if (currentUser) {
+          fetchCart();
+        }
+    
+      }, [currentUser, dispatch]);
 
   return (
     
@@ -87,7 +114,7 @@ export default function Header() {
                 >
                 <span className={`${path === '/cart' ? 'md:text-[#3d52a0]' : ''} flex items-center gap-1`}><FaShoppingCart />Cart</span> 
 
-                <span className='bg-red-500 rounded-full w-5 h-5 text-center text-white text-sm'>2</span>
+                <span className='bg-red-500 rounded-full w-5 h-5 text-center text-white text-sm'>{cartItems.length}</span>
                 </Navbar.Link>
             </Link>
 

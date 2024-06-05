@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { IoIosStar } from "react-icons/io";
 import { FaCartPlus, FaRegHeart } from "react-icons/fa";
+import { useSelector } from 'react-redux'
 
 export default function Product() {
 
     const params = useParams();
     const [product, setProduct] = useState({ imageUrls: [] });
     const [mainImage, setMainImage] = useState(product.imageUrls[0]);
+    const { currentUser } = useSelector((state) => state.user);
+    const navigate = useNavigate();
 
     useEffect(() => {
         try {
@@ -16,7 +19,6 @@ export default function Product() {
                const data = await res.json();
                if (res.ok) {
                 setProduct(data);
-                
                }
             }
             
@@ -32,6 +34,32 @@ export default function Product() {
         }
     }, [product]);
 
+
+    const handleAddToCart = async () => {
+        try {
+            const res = await fetch('/api/cart/addToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: currentUser._id,
+                    productId: product._id,
+                    quantity: 1
+                })
+            });
+            const data = await res.json()
+            if (data.success === false) {
+                console.log(data.message);
+                return;
+            }
+            if (res.ok) {
+                navigate('/cart');
+            }
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
   return (
     <div className='max-w-6xl mx-auto'>
@@ -50,14 +78,14 @@ export default function Product() {
 
                     <div className="flex sm:flex-col md:flex-row gap-1 overflow-x-auto sm:order-1 md:order-2 custom-scrollbar">
                         {product.imageUrls.map((image, index) => (
-                            <img src={image} alt="" key={index} className="w-16 sm:w-32 lg:w-20" onClick={() => setMainImage(image)}/>
+                            <img src={image} alt="product images" key={index} className="w-16 sm:w-32 lg:w-20" onClick={() => setMainImage(image)}/>
                         ))}
                     </div>
 
                 </div>
 
                 <div className="mt-4 flex-1 max-w-xl sm:ml-9 md:ml-0">
-                    <h3 className="text-2xl uppercase font-semibold text-slate-700">{product.name}</h3>
+                    <h3 className="text-2xl font-semibold text-slate-700">{product.name}</h3>
                     {product.offer ? (
                         <div className="text-xl mt-7 flex gap-3 items-center font-semibold">
                             <p className="text-lg text-red-600 line-through mt-1">Rs. {product.regularPrice}</p>
@@ -74,7 +102,7 @@ export default function Product() {
                     </div>
                     
                     <div className="flex flex-col gap-3 mt-7 w-48 ">
-                        <span className="p-2 border bg-[#3d52a0] text-white font-semibold rounded-md cursor-pointer hover:bg-[#4f62aa] flex items-center justify-center gap-1"><FaCartPlus />Add to Cart</span>
+                        <span className="p-2 border bg-[#3d52a0] text-white font-semibold rounded-md cursor-pointer hover:bg-[#4f62aa] flex items-center justify-center gap-1" onClick={handleAddToCart}><FaCartPlus />Add to Cart</span>
                         <span className="flex p-2 items-center mt-1 gap-2 hover:text-rose-600 cursor-pointer"><FaRegHeart/>Add to Wishlist</span>
                     </div>
 

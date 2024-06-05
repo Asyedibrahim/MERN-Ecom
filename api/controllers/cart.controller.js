@@ -13,7 +13,7 @@ export const addToCart = async (req, res, next) => {
         // Check user already has this product in the cart
         let cart = await Cart.findOne({userId});
         if (!cart) {
-            cart = new Cart({ userId, cartItems: [] })
+            cart = new Cart({ userId, cartItems: [] });
         }
 
         const itemIndex = cart.cartItems.findIndex((item) => item.productId.toString() === productId);
@@ -42,9 +42,56 @@ export const getCartItems = async (req, res, next) => {
             next(errorHandler(404, 'Items not found'))
         }
 
-        res.status(200).json(cart)
+        res.status(200).json(cart.cartItems)
 
     } catch (error) {
         next(error)
     }
 };
+
+export const deleteCartItem = async (req, res, next) => {
+    try {
+
+        const cart = await Cart.findOne({ userId: req.user.id });
+        if (!cart) {
+            return next(errorHandler(404, 'Cart not found!'));
+        }
+
+        const itemIndex = cart.cartItems.findIndex(item => item._id.toString() === req.params.cartItemId);
+        if (itemIndex === -1) {
+            return next(errorHandler(404, 'Item not found in cart!'));
+        }
+
+        // syntax: splice(startIndex, deleteCount);  This is used in array to remove, replacing, adding element
+        cart.cartItems.splice(itemIndex, 1);  
+
+        await cart.save();
+        res.status(200).json('Item Deleted from cart!');
+
+    } catch (error) {
+        next(error)
+    }
+};
+
+export const updateQuantity = async (req, res, next) => {
+    try {
+
+        const cart = await Cart.findOne({ userId: req.user.id });
+        if (!cart) {
+            return next(errorHandler(404, 'Cart not found!'));
+        }
+
+        const cartItem = cart.cartItems.find(item => item._id.toString() === req.params.cartItemId);
+        if (!cartItem) {
+            return next(errorHandler(404, 'Cart item not found!'));
+        }
+
+        cartItem.quantity = req.body.quantity;
+        await cart.save();
+
+        res.status(200).json('Quantity updated successfully');
+
+      } catch (error) {
+        next(error);
+      }
+}

@@ -58,7 +58,6 @@ export const editProduct = async (req, res, next) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(req.params.productId, {
             ...req.body,
-            userId: req.params.userId
         }, { new: true });
         res.status(200).json(updatedProduct)
     } catch (error) {
