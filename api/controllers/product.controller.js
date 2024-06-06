@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js";
+import Category from "../models/category.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createProduct = async (req, res, next) => {
@@ -65,7 +66,7 @@ export const editProduct = async (req, res, next) => {
     }
 };
 
-export const getProducts = async (req, res, next) => {
+export const getProduct = async (req, res, next) => {
     try {
         const getProduct = await Product.findById(req.params.productId).populate('categoryId', 'name');
         res.status(200).json(getProduct);
@@ -73,4 +74,21 @@ export const getProducts = async (req, res, next) => {
         next(error)
     }
     
+};
+
+export const getProductsByCategory = async (req, res, next) => {
+    try {
+        const categoryId = req.params.categoryId;
+
+        const category = await Category.findById(categoryId);
+        if (!category) {
+            return next(errorHandler(404,'Category not found' ));
+        }
+        
+        const products = await Product.find({ categoryId: categoryId }).select('name description regularPrice discountPrice offer trending imageUrls');
+
+        res.status(200).json({ category, products });
+    } catch (error) {
+        next(error);
+    }
 };

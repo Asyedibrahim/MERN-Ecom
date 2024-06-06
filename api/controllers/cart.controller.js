@@ -35,11 +35,15 @@ export const addToCart = async (req, res, next) => {
 export const getCartItems = async (req, res, next) => {
     try {
         const {userId} = req.params;
+
+        if (req.user.id !== req.params.userId) {
+            return next(errorHandler(403, 'You are not allowed to see cart!'))
+        }
         
         const cart = await Cart.findOne({ userId }).populate('cartItems.productId');
 
         if (!cart) {
-            next(errorHandler(404, 'Items not found'))
+            return res.status(200).json([]);
         }
 
         res.status(200).json(cart.cartItems)

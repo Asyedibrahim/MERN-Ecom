@@ -1,8 +1,8 @@
-import { Label, Spinner, Table, TextInput, Textarea } from 'flowbite-react';
+import { Label, Spinner, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
+import { useSelector } from 'react-redux';
 
 export default function CreateCategory() {
 
@@ -11,6 +11,7 @@ export default function CreateCategory() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     try {
@@ -112,7 +113,7 @@ export default function CreateCategory() {
         <form className='my-8 flex gap-5 items-center' onSubmit={handleSubmit} autoComplete='off'>
           <div className="flex-1">
             <Label>Product Name : </Label>
-            <TextInput type='text' placeholder='Eg. Electronics' id='name' required onChange={handleChange} className='w-full'/>
+            <TextInput type='text' color='white' placeholder='Eg. Electronics' id='name' required onChange={handleChange} className='w-full'/>
           </div>
           <div className="flex-1">
             <button type='submit' disabled={loading} className='rounded-lg p-2 bg-[#3d52a0] text-white hover:bg-[#4f62aa] disabled:bg-[#4f62aa] font-semibold w-full mt-6'>
@@ -128,32 +129,38 @@ export default function CreateCategory() {
           </div>
           {error && <p className='mt-3 text-red-600'>{error}</p>}
         </form>
-  
-        <h2 className='text-slate-700 font-semibold text-xl mt-5'>Category Lists</h2>
 
-        <div className='overflow-x-auto mt-5 border border-gray-300 shadow-md rounded-md'>
-          <table className='min-w-full divide-y divide-gray-200'>
-          <thead className='bg-[#4f62aa]'>
-            <tr>
-              <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>No</th>
-              <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Date created</th>
-              <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Category Name</th>
-              <th className='px-6 py-3 text-center text-sm font-medium text-white uppercase tracking-wider' colSpan='2'>Actions</th>
-            </tr>
-          </thead>
-          <tbody className='bg-white divide-y divide-gray-200'>
-            {categories.map((category, index) => (
-              <tr key={category._id} className='hover:bg-[#ede8f5]'>
-                <td className='px-6 py-4 whitespace-nowrap text-sm'>{index + 1}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm'>{new Date(category.createdAt).toLocaleDateString()}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm'>{category.name}</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold cursor-pointer' onClick={() => handleClick(category.name, category._id)}>Edit</td>
-                <td className='px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold cursor-pointer' onClick={() => handleDelete(category._id)}>Delete</td>
-              </tr>
-            ))}
-          </tbody>
-          </table>
-        </div>
+        
+        {currentUser.isAdmin && (
+          <>
+            <h2 className='text-slate-700 font-semibold text-xl mt-5'>Category Lists</h2>
+
+            <div className='overflow-x-auto mt-5 border border-gray-300 shadow-md rounded-md'>
+              <table className='min-w-full divide-y divide-gray-200'>
+              <thead className='bg-[#4f62aa]'>
+                <tr>
+                  <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>No</th>
+                  <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Date created</th>
+                  <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Category Name</th>
+                  <th className='px-6 py-3 text-center text-sm font-medium text-white uppercase tracking-wider' colSpan='2'>Actions</th>
+                </tr>
+              </thead>
+              <tbody className='bg-white divide-y divide-gray-200'>
+                {categories.map((category, index) => (
+                  <tr key={category._id} className='hover:bg-[#ede8f5]'>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm'>{index + 1}</td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm'>{new Date(category.createdAt).toLocaleDateString()}</td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm'>{category.name}</td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-green-600 font-semibold cursor-pointer' onClick={() => handleClick(category.name, category._id)}>Edit</td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-red-600 font-semibold cursor-pointer' onClick={() => handleDelete(category._id)}>Delete</td>
+                  </tr>
+                ))}
+              </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      
 
       </div>
     </div>

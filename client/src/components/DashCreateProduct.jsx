@@ -167,8 +167,8 @@ export default function DashCreateProduct() {
                 <div className="flex flex-col gap-2">
                     <Label>Product Name : </Label>
                     <div className="flex gap-5 items-center">
-                        <TextInput type='text' placeholder='Eg. Laptop' id='name' required onChange={handleChange} value={formData.name}/>
-                        <Select onChange={(e) => setFormData({...formData, categoryId: e.target.value})}>
+                        <TextInput type='text' color='white' placeholder='Eg. Laptop' id='name' required onChange={handleChange} value={formData.name}/>
+                        <Select onChange={(e) => setFormData({...formData, categoryId: e.target.value})} color='white'>
                             <option>Select a category</option>
                             {categories.map((category) => (
                                 <option key={category._id} value={category._id} className='bg-gray-50'> {category.name} </option>
@@ -178,18 +178,18 @@ export default function DashCreateProduct() {
 
                     <div className="mt-7 flex flex-col gap-2">
                         <Label>Product Description : </Label>
-                        <Textarea placeholder='Add a Description...' id='description' rows='3' onChange={handleChange} value={formData.description}/>
+                        <Textarea color='white' placeholder='Add a Description...' id='description' rows='3' onChange={handleChange} value={formData.description}/>
                     </div>
 
                     <div className="flex gap-7 items-center">
                         <div className="mt-7 flex flex-col gap-2">
                             <Label>Regular Price : </Label>
-                            <input type="number" id='regularPrice' min='0' max='100000' className='border-2 border-slate-300 rounded-lg' required onChange={handleChange} value={formData.regularPrice}/>
+                            <input type="number" id='regularPrice' min='0' max='10000000' className='border-2 border-slate-300 rounded-lg' required onChange={handleChange} value={formData.regularPrice}/>
                         </div>
                         {formData.offer && (
                             <div className="mt-7 flex flex-col gap-2">
                                 <Label>Discount Price : </Label>
-                                <input type="number" id='discountPrice' min='0' max='100000' className='border-2 border-slate-300 rounded-lg' required onChange={handleChange} value={formData.discountPrice}/>
+                                <input type="number" id='discountPrice' min='0' max='10000000' className='border-2 border-slate-300 rounded-lg' required onChange={handleChange} value={formData.discountPrice}/>
                             </div>
                         )}
                     </div>
@@ -228,7 +228,7 @@ export default function DashCreateProduct() {
                             hidden 
                             ref={fileRef} />
                         <div 
-                            className='border-4 border-dashed p-10 bg-gray-50 flex flex-col items-center text-slate-400 cursor-pointer' 
+                            className='border-4 border-dashed p-10 bg-white flex flex-col items-center text-slate-400 cursor-pointer' 
                             onClick={()=>fileRef.current.click()}>
                                 <IoCloudUploadOutline className='text-4xl'/>Upload image
                         </div>

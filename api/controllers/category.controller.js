@@ -27,10 +27,6 @@ export const createCategory = async (req, res, next) => {
 };
 
 export const getCategory = async (req, res, next) => {
-    if (!req.user.isAdmin) {
-        return next(errorHandler(403, 'You are not allowed to get category'));
-    }
-
     try {
         const categories = await Category.find()
         res.status(200).json(categories);

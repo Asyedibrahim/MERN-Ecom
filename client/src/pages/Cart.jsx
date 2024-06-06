@@ -4,6 +4,7 @@ import { Spinner, Table } from 'flowbite-react';
 import CartCard from '../components/CartCard';
 import { removeCartItem, setCartItems, updateCartItemQuantity } from '../redux/user/cartSlice.js';
 import { BsCartCheckFill } from "react-icons/bs";
+import empty from '../assets/images/empty.png'
 
 export default function Cart() {
 
@@ -18,6 +19,7 @@ export default function Cart() {
         setLoading(true)
         const res = await fetch(`/api/cart/${currentUser._id}`);
         const data = await res.json();
+
         if (data.success === false) {
           console.log(data.message);
           setLoading(false);
@@ -32,11 +34,14 @@ export default function Cart() {
         setLoading(false);
       }
     }
+
     if (currentUser) {
       fetchCart();
+    } else {
+      setLoading(false);
     }
 
-  }, [dispatch]);
+  }, [dispatch, currentUser]);
 
   const handleDeleteItem = async (cartItemId) => {
     try {
@@ -135,7 +140,9 @@ const calculatePrice = () => {
   }
 
   if (!currentUser || !cartItems || cartItems.length === 0) {
-    return <p className='text-3xl my-52 justify-center flex gap-2 items-center'>You have no cart items!</p>;
+    return <div className='justify-center flex gap-2 items-center '>
+        <img src={empty} alt="" className='w-full sm:w-[80%] md:w-[60%] lg:w-[40%]'/>
+    </div>;
   }
 
   const { totalRegularPrice, totalAmount, discount } = calculatePrice();
@@ -146,9 +153,15 @@ const calculatePrice = () => {
       
         <div className='mx-auto grid grid-cols-12 gap-7 '>
           {/* Left side */}
-          <div className=" bg-white overflow-x-auto col-span-12 md:col-span-7 lg:col-span-8 shadow-md border "> 
-          <Table> {/* Use Flowbite Table component */}
-              <Table.Body> {/* Use Flowbite TableBody component */}
+          <div className="  overflow-x-auto col-span-12 md:col-span-7 lg:col-span-8 "> 
+            <Table hoverable className=' bg-white shadow-sm border'>
+              <Table.Head>
+                <Table.HeadCell>images</Table.HeadCell>
+                <Table.HeadCell>Product name</Table.HeadCell>
+                <Table.HeadCell>Quantity</Table.HeadCell>
+                <Table.HeadCell>Price</Table.HeadCell>
+                <Table.HeadCell>delete</Table.HeadCell>
+              </Table.Head>
                 {cartItems.map((item) => (
                   <CartCard 
                     key={item._id} 
@@ -158,7 +171,6 @@ const calculatePrice = () => {
                     onDecrement = {decrementQuantity}
                   />
                 ))}
-              </Table.Body>
             </Table>
           </div>
 
@@ -170,10 +182,13 @@ const calculatePrice = () => {
                 <span>Price <span>({cartItems.length} items)</span></span>
                 <span>₹ {totalRegularPrice.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-lg mt-5">
-                <span>Discount</span>
-                <span className='text-green-600 font-semibold'>- ₹ {discount.toLocaleString()}</span>
-              </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-lg mt-5">
+                  <span>Discount</span>
+                  <span className='text-green-600 font-semibold'>- ₹ {discount.toLocaleString()}</span>
+                </div>
+              )}
+              
               <div className="flex justify-between text-lg mt-5 border-b border-b-gray-400 pb-2">
                 <span>Delivery Charges</span>
                 <span className='text-green-600 font-semibold'>Free</span>
@@ -182,9 +197,11 @@ const calculatePrice = () => {
                 <span>Total Amount</span>
                 <span>₹ {totalAmount.toLocaleString()}</span>
               </div>
-              <div className="text-xl mt-5 font-semibold text-green-600 text-center">
-                <span>You will save ₹ <span>{discount.toLocaleString()}</span> on this order</span>
-              </div>
+              {discount > 0 && (
+                <div className="text-xl mt-5 font-semibold text-green-600 text-center">
+                  <span>You will save ₹ <span>{discount.toLocaleString()}</span> on this order</span>
+                </div>
+              )}
             </div>
           </div>
 

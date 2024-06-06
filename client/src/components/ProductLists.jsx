@@ -15,7 +15,7 @@ export default function ProductLists() {
   useEffect(() => {
     try {
       const fetchProducts = async () => {
-        const res = await fetch('api/product/getProducts');
+        const res = await fetch('/api/product/getProducts');
         const data = await res.json();
         if (res.ok) {
           setProducts(data);
@@ -47,7 +47,7 @@ export default function ProductLists() {
   }
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 '>
+    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 min-h-screen'>
       <h1 className='text-3xl font-semibold my-7'>Product Lists</h1>
       {loading ? (
         <div className=" my-52 flex justify-center">

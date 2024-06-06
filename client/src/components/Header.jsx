@@ -6,6 +6,7 @@ import { MdAccountCircle } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { setCartItems } from '../redux/user/cartSlice';
+import { signOutSuccess } from '../redux/user/userSlice';
 
 
 export default function Header() {
@@ -37,6 +38,24 @@ export default function Header() {
         }
     
       }, [currentUser, dispatch]);
+
+      const handleSignOut = async () => {
+        try {
+            const res = await fetch('/api/auth/signout', {
+                method: 'POST'
+            });
+    
+            const data = await res.json();
+            if (res.ok) {
+                dispatch(signOutSuccess(data));
+            } else {
+                console.log(data.message);
+            }
+            
+        } catch (error) {
+            console.log(error.message);
+        }
+    };
 
   return (
     
@@ -77,7 +96,7 @@ export default function Header() {
                         </Dropdown.Item>
                     </Link>
                     <Dropdown.Divider />
-                    <Dropdown.Item>
+                    <Dropdown.Item onClick={handleSignOut}>
                         Sign out
                     </Dropdown.Item>
                 </Dropdown>
@@ -114,7 +133,10 @@ export default function Header() {
                 >
                 <span className={`${path === '/cart' ? 'md:text-[#3d52a0]' : ''} flex items-center gap-1`}><FaShoppingCart />Cart</span> 
 
-                <span className='bg-red-500 rounded-full w-5 h-5 text-center text-white text-sm'>{cartItems.length}</span>
+                <span className='bg-red-500 rounded-full w-5 h-5 text-center text-white text-sm'>
+                   {currentUser && cartItems.length > 0 ? cartItems.length : 0} 
+                   
+                </span>
                 </Navbar.Link>
             </Link>
 
