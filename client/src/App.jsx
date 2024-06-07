@@ -7,7 +7,6 @@ import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import Cart from './pages/Cart';
-import Wishlist from './pages/Wishlist';
 import PrivateRoute from './components/PrivateRoute';
 import Product from './pages/Product';
 import Footer from './components/Footer';
@@ -15,7 +14,9 @@ import CategoryProduct from './pages/CategoryProduct';
 
 
 export default function App() {
+
   return (
+    
     <BrowserRouter>
 
       <Header />
@@ -30,8 +31,6 @@ export default function App() {
         <Route path='/products' element={<Products />}></Route>
 
         <Route path='/cart' element={<Cart />}></Route>
-
-        <Route path='/wishlist' element={<Wishlist />}></Route>
 
         <Route element={<PrivateRoute />}>
           <Route path='/dashboard' element={<Dashboard />}></Route>
