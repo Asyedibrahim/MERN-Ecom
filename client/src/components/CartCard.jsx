@@ -11,15 +11,19 @@ export default function CartCard({ item, onDelete, onIncrement, onDecrement }) {
         navigate(`/product/${item.productId._id}`)
     }
 
+    const imageUrl = item.productId?.imageUrls?.[0] || '/placeholder.jpg'; 
+    const productName = item.productId?.name || 'Product Unavailable';
+    const regularPrice = item.productId?.regularPrice || 0;
+
   return (
-    <Table.Body className='divide-y' key={item._id}>
-        <Table.Row className='cursor-pointer'>
+    
+        <Table.Row className='cursor-pointer' key={item._id}>
             <Table.Cell className='ps-3' onClick={handleProductPage}>
-                <img src={item.productId.imageUrls[0]} alt="" className='w-16 h-16 object-cover bg-gray-500' />
+                <img src={imageUrl} alt="" className='w-16 h-16 object-cover bg-gray-500' />
             </Table.Cell>
             <Table.Cell className='whitespace-nowrap text-sm' style={{ maxWidth: '200px' }} onClick={handleProductPage}>
             <div className='truncate'>
-                {item.productId.name}
+                {productName}
             </div>
         </Table.Cell>
             <Table.Cell className='text-sm'>
@@ -30,13 +34,12 @@ export default function CartCard({ item, onDelete, onIncrement, onDecrement }) {
                 </div>
             </Table.Cell>
             <Table.Cell className='whitespace-nowrap text-sm' onClick={handleProductPage}>
-                ₹ {item.productId.regularPrice.toLocaleString()}
+                ₹ {regularPrice.toLocaleString()}
             </Table.Cell>
             <Table.Cell className='whitespace-nowrap text-lg text-red-600' onClick={() => onDelete(item._id)}>
                 <RiDeleteBin5Fill className="cursor-pointer"/>
             </Table.Cell>
         </Table.Row>
-  </Table.Body>
     
   );
 }

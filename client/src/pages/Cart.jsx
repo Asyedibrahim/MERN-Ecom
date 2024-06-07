@@ -70,11 +70,11 @@ export default function Cart() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ quantity: newQuantity }) // Send the new quantity in the request body
+        body: JSON.stringify({ quantity: newQuantity }) 
       });
       const data = await res.json();
       if (res.ok) {
-        console.log(data); // Log the response from the server
+        console.log(data); 
       }
     } catch (error) {
       console.log(error.message);
@@ -93,11 +93,11 @@ export default function Cart() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ quantity: newQuantity }) // Send the new quantity in the request body
+        body: JSON.stringify({ quantity: newQuantity }) 
       });
       const data = await res.json();
       if (res.ok) {
-        console.log(data); // Log the response from the server
+        console.log(data); 
       }
     } catch (error) {
       console.log(error.message);
@@ -106,24 +106,27 @@ export default function Cart() {
 }
 
 const calculatePrice = () => {
+  
   let totalRegularPrice = 0;
   let totalDiscountedPrice = 0;
 
-  if (cartItems) {
+  if (!cartItems || !cartItems.length) {
+    return { totalRegularPrice, totalAmount: 0, discount: 0 }; 
+  }
       cartItems.forEach(item => {
-          const regularPrice = item.productId.regularPrice;
-          const discountPrice = item.productId.discountPrice;
+          const regularPrice = item.productId?.regularPrice || 0;
+          const discountPrice = item.productId?.discountPrice || 0;
           const quantity = item.quantity;
 
           totalRegularPrice += regularPrice * quantity;
           
-          if (item.productId.offer) {
+          if (item.productId?.offer) {
               totalDiscountedPrice += discountPrice * quantity;
           } else {
               totalDiscountedPrice += regularPrice * quantity;
           }
       });
-  }
+  
 
   const totalAmount = totalDiscountedPrice;
   const discount = totalRegularPrice - totalDiscountedPrice;
@@ -139,7 +142,7 @@ const calculatePrice = () => {
     );
   }
 
-  if (!currentUser || !cartItems || cartItems.length === 0) {
+  if (!currentUser || !cartItems.length) {
     return <div className='justify-center flex gap-2 items-center '>
         <img src={empty} alt="" className='w-full sm:w-[80%] md:w-[60%] lg:w-[40%]'/>
     </div>;
@@ -162,6 +165,7 @@ const calculatePrice = () => {
                 <Table.HeadCell>Price</Table.HeadCell>
                 <Table.HeadCell>delete</Table.HeadCell>
               </Table.Head>
+              <Table.Body className='divide-y' >
                 {cartItems.map((item) => (
                   <CartCard 
                     key={item._id} 
@@ -171,6 +175,7 @@ const calculatePrice = () => {
                     onDecrement = {decrementQuantity}
                   />
                 ))}
+                </Table.Body>
             </Table>
           </div>
 

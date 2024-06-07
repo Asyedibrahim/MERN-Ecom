@@ -89,23 +89,3 @@ export const getProductsByCategory = async (req, res, next) => {
         next(error);
     }
 };
-
-// export const displayProducts = async (req, res, next) => {
-//     try {
-//         const { query } = req.query;
-
-//         if (mongoose.Types.ObjectId.isValid(query)) {
-//             const products = await Product.find({ categoryId: query }).populate("categoryId");
-//             res.json({ products });
-//         } else {
-          
-//             const products = await Product.find({
-//                 name: { $regex: query, $options: "i" } 
-//             }).populate("categoryId");
-//             res.json({ products });
-//         }
-
-//     } catch (error) {
-//         next(error)
-//     }
-// };

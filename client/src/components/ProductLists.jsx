@@ -99,7 +99,7 @@ export default function ProductLists() {
           
         </div>
       ) : (
-        <p>You have no post yet!</p>
+        <p className='text-2xl font-semibold'>You have no products yet...!</p>
       )}
     </div>
   )

@@ -2,11 +2,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { FaHeadphones, FaHeart, FaHome, FaShoppingCart } from "react-icons/fa";
-import { MdAccountCircle } from "react-icons/md";
+import { MdAccountCircle, MdDashboardCustomize } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { setCartItems } from '../redux/user/cartSlice';
-import { signOutSuccess } from '../redux/user/userSlice';
+import { deleteFailure, deleteStart, deleteSuccess, signOutSuccess } from '../redux/user/userSlice';
+import { TiDeleteOutline } from 'react-icons/ti';
+import { HiArrowSmRight } from 'react-icons/hi';
 
 
 export default function Header() {
@@ -14,7 +16,7 @@ export default function Header() {
     const path = useLocation().pathname;
     const { currentUser } = useSelector((state) => state.user);
     
-    const cartItems = useSelector((state) => state.cart.items); 
+    const cartItems = useSelector((state) => state.cart.items) || []; 
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -27,7 +29,7 @@ export default function Header() {
               return;
             }
             if (res.ok) {
-              dispatch(setCartItems(data));
+              dispatch(setCartItems(data.items) || []);
             }
           } catch (error) {
             console.log(error.message);
@@ -54,6 +56,24 @@ export default function Header() {
             
         } catch (error) {
             console.log(error.message);
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            dispatch(deleteStart());
+            const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
+                method: 'DELETE'
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                dispatch(deleteFailure(data.message));
+                return;
+            } else {
+                dispatch(deleteSuccess(data));
+            }
+        } catch (error) {
+            dispatch(deleteFailure(error.message))
         }
     };
 
@@ -84,19 +104,24 @@ export default function Header() {
                 label={
                     <div className="flex items-center gap-1 text-xl font-semibold">
                         <MdAccountCircle className='text-2xl'/>
-                        <span>user</span>
+                        <span >User</span>
                     </div>
                 }>
                     <Dropdown.Header>
                         <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
                     </Dropdown.Header>
-                    <Link to={'/dashboard?tab=profile'}>
-                        <Dropdown.Item>
-                            My Account
-                        </Dropdown.Item>
-                    </Link>
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={handleSignOut}>
+                    {currentUser.isAdmin && (
+                        <Link to={'/dashboard?tab=productLists'}>
+                            <Dropdown.Item icon={MdDashboardCustomize} className='text-blue-500 font-semibold'>
+                                Dashboard
+                            </Dropdown.Item>
+                        </Link>
+                    )}
+                    {currentUser.isAdmin && <Dropdown.Divider />}
+                    <Dropdown.Item onClick={handleDelete} icon={TiDeleteOutline} className='text-red-500 font-semibold'>
+                        Delete account
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={handleSignOut} icon={HiArrowSmRight} className='text-green-500 font-semibold'>
                         Sign out
                     </Dropdown.Item>
                 </Dropdown>
@@ -134,7 +159,7 @@ export default function Header() {
                 <span className={`${path === '/cart' ? 'md:text-[#3d52a0]' : ''} flex items-center gap-1`}><FaShoppingCart />Cart</span> 
 
                 <span className='bg-red-500 rounded-full w-5 h-5 text-center text-white text-sm'>
-                   {currentUser && cartItems.length > 0 ? cartItems.length : 0} 
+                   {currentUser && !cartItems.length ? 0 : cartItems.length } 
                    
                 </span>
                 </Navbar.Link>

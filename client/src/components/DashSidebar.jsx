@@ -87,24 +87,13 @@ export default function DashSidebar() {
                     </Link>
                 </Sidebar.ItemGroup>
             )}
-            <Sidebar.ItemGroup className='flex flex-col gap-1'>
+            
+            {currentUser.isAdmin && (
+                <Sidebar.ItemGroup className='flex flex-col gap-1'>
                 <Sidebar.Item icon={HiUser} className='cursor-text hover:bg-transparent font-semibold text-xl text-[#3d52a0]'>
-                    Account Settings 
+                Account Settings 
                 </Sidebar.Item>
 
-                <Link to={'/dashboard?tab=profile'} >
-                    <Sidebar.Item active={tab === 'profile'} label={`${currentUser.isAdmin ? 'Admin' : 'User'}`} labelColor='dark' as={'div'} className={`${tab === 'profile' && 'bg-[#3d52a0] text-white hover:bg-[#4f62aa]' } font-semibold`}>
-                        Profile
-                    </Sidebar.Item>
-                </Link>
-                <Link to={'/dashboard?tab=address'} >
-                    <Sidebar.Item  active={tab === 'address'} as={'div'} className={`${tab === 'address' && 'bg-[#3d52a0] text-white hover:bg-[#3d52a0]'} font-semibold`}>
-                       Manage Address
-                    </Sidebar.Item>
-                </Link>
-            </Sidebar.ItemGroup>
-
-            <Sidebar.ItemGroup className='flex flex-col gap-1'>
                 <Sidebar.Item  icon={TiDeleteOutline} className="cursor-pointer" onClick={handleDelete}>
                 Delete account 
                 </Sidebar.Item>
@@ -113,6 +102,7 @@ export default function DashSidebar() {
                 Sign out 
                 </Sidebar.Item>
             </Sidebar.ItemGroup>
+            )}
 
         </Sidebar.Items>
     </Sidebar>

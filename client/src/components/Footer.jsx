@@ -5,7 +5,7 @@ import { BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTwitterX } from 'react
 
 export default function FooterCon() {
   return (
-    <Footer container className='border border-[#3d52a0] border-t-8 mt-10'>
+    <Footer container className='border border-[#3d52a0] border-t-8 '>
         <div className="w-full max-w-7xl mx-auto">
             <div className="grid w-full justify-between sm:flex md:grid-cols-1">
 

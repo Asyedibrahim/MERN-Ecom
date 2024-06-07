@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaHeadphones } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Products() {
   const [productByCategory, setProductByCategory] = useState({});
@@ -69,8 +69,11 @@ const getRandomProducts = (products, count) => {
       const randomProducts = getRandomProducts(categoryData.products, 4);
       
       return (
-        <div key={categoryData.category._id} className='flex flex-col gap-8 mt-10'>
-          <h2 className='text-2xl font-semibold '>{categoryData.category.name}</h2>
+        <div key={categoryData.category._id} className='flex flex-col gap-5 mt-6'>
+          <div>
+            <h2 className='text-2xl font-semibold'>{categoryData.category.name}</h2>
+            <Link to={`/categoryProducts/${categoryData.category._id}`} className='text-blue-600 hover:underline font-semibold text-sm'>View all products</Link>
+          </div>
           
           <div className='flex flex-wrap gap-5'>
 
