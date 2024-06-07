@@ -21,9 +21,6 @@ export const createProduct = async (req, res, next) => {
 };
 
 export const getAllProducts = async (req, res, next) => {
-    if (!req.user.isAdmin) {
-        return next(errorHandler(403, 'You are not allowed to see products'));
-    }
     try {
         const getProducts = await Product.find().populate('categoryId', 'name');
         res.status(200).json(getProducts);
@@ -92,3 +89,23 @@ export const getProductsByCategory = async (req, res, next) => {
         next(error);
     }
 };
+
+// export const displayProducts = async (req, res, next) => {
+//     try {
+//         const { query } = req.query;
+
+//         if (mongoose.Types.ObjectId.isValid(query)) {
+//             const products = await Product.find({ categoryId: query }).populate("categoryId");
+//             res.json({ products });
+//         } else {
+          
+//             const products = await Product.find({
+//                 name: { $regex: query, $options: "i" } 
+//             }).populate("categoryId");
+//             res.json({ products });
+//         }
+
+//     } catch (error) {
+//         next(error)
+//     }
+// };

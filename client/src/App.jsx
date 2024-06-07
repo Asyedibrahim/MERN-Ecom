@@ -10,6 +10,9 @@ import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import PrivateRoute from './components/PrivateRoute';
 import Product from './pages/Product';
+import Footer from './components/Footer';
+import SearchProduct from './pages/SearchProduct';
+
 
 export default function App() {
   return (
@@ -36,7 +39,11 @@ export default function App() {
 
         <Route path='/product/:productId' element={<Product />}></Route>
 
+        <Route path='/search' element={<SearchProduct />}></Route>
+
       </Routes>
+
+      <Footer />
 
     </BrowserRouter>
   )
