@@ -3,7 +3,10 @@ import { useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
 import { ImCross } from "react-icons/im";
 import { FaCheck } from "react-icons/fa";
-import { Spinner, Table } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 export default function ProductLists() {
 
@@ -30,15 +33,33 @@ export default function ProductLists() {
 
   const handleDelete = async (productId) => {
     try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to delete this product!',
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, Delete it!',
+        cancelButtonText: 'Keep it!'
+      });
+  
+    if (result.isConfirmed) {
       const res = await fetch(`/api/product/deleteProduct/${currentUser._id}/${productId}`, {
         method: 'DELETE'
       });
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
       if (res.ok) {
         setProducts((prev) => prev.filter((product) => product._id !== productId));
+        toast.success('Product has been deleted!')
       } 
+    }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -60,7 +81,7 @@ export default function ProductLists() {
             <thead className='bg-[#4f62aa]'>
               <tr>
                 <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>No</th>
-                <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Date created</th>
+                <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>created</th>
                 <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Product Name</th>
                 <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Category</th>
                 <th className='px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider'>Trending</th>
@@ -76,7 +97,7 @@ export default function ProductLists() {
 
                   <td className='px-6 py-4 whitespace-nowrap text-sm' onClick={() => handleProductPage(product._id)}>{new Date(product.createdAt).toLocaleDateString()}</td>
 
-                  <td className='px-6 py-4 whitespace-nowrap text-sm' onClick={() => handleProductPage(product._id)}>{product.name}</td>
+                  <td className='px-6 py-4 whitespace-nowrap text-sm line-clamp-1 !w-56' onClick={() => handleProductPage(product._id)}>{product.name}</td>
 
                   <td className='px-6 py-4 whitespace-nowrap text-sm' onClick={() => handleProductPage(product._id)}>{product.categoryId?.name || 'Uncategorized'}</td>
 
@@ -95,7 +116,7 @@ export default function ProductLists() {
                 </tr>
               ))}
             </tbody>
-      </table>
+        </table>
           
         </div>
       ) : (

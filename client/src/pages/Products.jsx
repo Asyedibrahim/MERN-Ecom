@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FaHeadphones } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Products() {
   const [productByCategory, setProductByCategory] = useState({});
   const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
 
@@ -18,7 +19,7 @@ export default function Products() {
           setCategories(data);
         }
       } catch (error) {
-        setError(error.message);
+        toast.error(error.message);
       }
     };
 
@@ -40,7 +41,7 @@ export default function Products() {
         );
         setProductByCategory(productsByCategory);
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
       }
     };
 

@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice.js';
 import { Spinner } from 'flowbite-react';
 import OAuth from '../components/OAuth.jsx';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignIn() {
 
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
 
@@ -37,15 +38,18 @@ export default function SignIn() {
 
       if(!res.ok) {
         dispatch(signInFailure(data.message));
+        toast.error(`Sign in failed: ${data.message}`);
         return;
       } 
       if (res.ok) {
         dispatch(signInSuccess(data));
+        toast.success('Sign in successful!');
         navigate('/');
       }
 
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.error(`Sign in failed: ${error.message}`);
     }
   }
 
@@ -63,7 +67,7 @@ export default function SignIn() {
           <h3 className='text-[#3d52a0] text-2xl font-bold'>Login</h3>
           <p className='mt-5 '>Don't have an account, <Link to='/sign-up' className='text-blue-700 font-semibold hover:underline cursor-pointer whitespace-nowrap'>Register</Link></p>
 
-          <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmit}>   
+          <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmit} autoComplete='off'>   
             <input type="email" id='email' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter email' onChange={handleChange}/>
 
             <input type="password" id='password' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter password' onChange={handleChange}/>
@@ -79,8 +83,6 @@ export default function SignIn() {
             </button>
           </form>
 
-          {error && <p className='mt-3 text-red-600'>{error}</p>}
-          
           <div className="grid grid-cols-3 items-center mt-8 text-gray-500">
             <hr className='border-gray-500'/>
             <p className='text-center'>OR</p>

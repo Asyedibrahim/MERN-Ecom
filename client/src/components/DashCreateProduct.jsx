@@ -6,6 +6,8 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase.js';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function DashCreateProduct() {
 
@@ -76,15 +78,15 @@ export default function DashCreateProduct() {
                     imageUrls: formData.imageUrls.concat(urls)
                 });
             }).catch((err) => {
-                console.log('Image upload failed (2mb max per image)');
+                toast.error('Image upload failed (2mb max per image)');
                 setLoading(false);
             })
             setLoading(false);
         } else if (files.length == 0) {
-            console.log('You must upload atleast one image');
+            toast.error('You must upload atleast one image');
             setLoading(false);
         } else {
-            console.log('You can only upload 6 image per listing');
+            toast.error('You can only upload 6 image per listing');
             setLoading(false);
         }
     };
@@ -101,6 +103,7 @@ export default function DashCreateProduct() {
                 console.log(progress);
             },
             (error) => {
+                toast.error('Error uploading image');
                 reject(error);
             },
             () => {
@@ -124,15 +127,15 @@ export default function DashCreateProduct() {
             setLoading(true);
             if (formData.imageUrls.length < 1) {
                 setLoading(false);
-                return console.log('You must upload atleast one image');
+                return toast.error('You must upload atleast one image');
             }
             if (+formData.discountPrice > +formData.regularPrice) {
                 setLoading(false);
-                return console.log('Discount price must be lower than regular price');
+                return toast.error('Discount price must be lower than regular price');
             }
             if (formData.categoryId === '' || !formData.categoryId) {
                 setLoading(false);
-                console.log('Must select category');
+                toast.error('Must select category');
             }
             const res = await fetch('/api/product/create', {
                 method: 'POST',
@@ -146,16 +149,16 @@ export default function DashCreateProduct() {
             });
             const data = await res.json();
             if (data.success === false) {
-                console.log(data.succes);
+                toast.error(data.message);
                 setLoading(false);
                 return;
             }
             setLoading(false);
+            toast.success('Product created!');
             navigate(`/product/${data._id}`);
-            console.log('created');
         } catch (error) {
             setLoading(false);
-            console.log(error.message);
+            toast.error(error.message);
         }
     }
 

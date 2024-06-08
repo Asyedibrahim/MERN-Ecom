@@ -5,6 +5,9 @@ import CartCard from '../components/CartCard';
 import { removeCartItem, setCartItems, updateCartItemQuantity } from '../redux/user/cartSlice.js';
 import { BsCartCheckFill } from "react-icons/bs";
 import empty from '../assets/images/empty.png'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 export default function Cart() {
 
@@ -21,7 +24,7 @@ export default function Cart() {
         const data = await res.json();
 
         if (data.success === false) {
-          console.log(data.message);
+          toast.error(data.message);
           setLoading(false);
           return;
         }
@@ -30,7 +33,7 @@ export default function Cart() {
           setLoading(false);
         }
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
         setLoading(false);
       }
     }
@@ -45,6 +48,18 @@ export default function Cart() {
 
   const handleDeleteItem = async (cartItemId) => {
     try {
+      const result = await Swal.fire({
+        title: 'Remove Item?',
+        text: 'You want to remove a product!',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Remove it!',
+        cancelButtonText: 'Keep it!'
+      });
+  
+      if (result.isConfirmed) {
         const res = await fetch(`/api/cart/${cartItemId}`, {
             method: 'DELETE'
         });
@@ -53,6 +68,7 @@ export default function Cart() {
           dispatch(removeCartItem(cartItemId));
           console.log(data);
         }
+      }
     } catch (error) {
         console.log(error.message);
     }

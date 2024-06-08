@@ -3,13 +3,13 @@ import b1 from '../assets/images/b1.jpeg';
 import { Link, useNavigate } from 'react-router-dom'
 import { Spinner } from 'flowbite-react';
 import OAuth from '../components/OAuth';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignUp() {
 
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(null);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -34,17 +34,17 @@ export default function SignUp() {
 
       if (data.success === false) {
         setLoading(false);
-        setError(data.message);
+        toast.error(data.message);
         return;
       } 
       if (res.ok) {
-        setError(null);
         setLoading(null);
+        toast.success('Registration successful!');
         navigate('/sign-in');
       }
 
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
       setLoading(false);
     }
   }
@@ -58,9 +58,7 @@ export default function SignUp() {
           <h3 className='text-[#3d52a0] text-2xl font-bold'>Register</h3>
           <p className='mt-5 '>if you already have an account, <Link to='/sign-in' className='text-blue-700 font-semibold hover:underline cursor-pointer whitespace-nowrap'>Login</Link></p>
 
-          <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmit}>
-            <input type="text" id='username' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter username' onChange={handleChange}/>
-
+          <form className="flex flex-col gap-5 mt-5" onSubmit={handleSubmit} autoComplete='off'>
             <input type="email" id='email' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter email' onChange={handleChange}/>
 
             <input type="password" id='password' className='rounded-xl p-3 border-none shadow-md' placeholder='Enter password' onChange={handleChange}/>
@@ -75,7 +73,6 @@ export default function SignUp() {
               }
             </button>
           </form>
-          {error && <p className='mt-3 text-red-600'>{error}</p>}
           <div className="grid grid-cols-3 items-center mt-8 text-gray-500">
             <hr className='border-gray-500'/>
             <p className='text-center'>OR</p>

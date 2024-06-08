@@ -1,7 +1,6 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Button, Dropdown, Navbar, TextInput } from 'flowbite-react';
-import { AiOutlineSearch } from 'react-icons/ai';
-import { FaHeadphones, FaHeart, FaHome, FaShoppingCart } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Dropdown, Navbar } from 'flowbite-react';
+import { FaHeadphones, FaHome, FaShoppingCart } from "react-icons/fa";
 import { MdAccountCircle, MdDashboardCustomize } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -9,7 +8,9 @@ import { setCartItems } from '../redux/user/cartSlice';
 import { deleteFailure, deleteStart, deleteSuccess, signOutSuccess } from '../redux/user/userSlice';
 import { TiDeleteOutline } from 'react-icons/ti';
 import { HiArrowSmRight } from 'react-icons/hi';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 export default function Header() {
 
@@ -18,6 +19,7 @@ export default function Header() {
     
     const cartItems = useSelector((state) => state.cart.items) || []; 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -43,37 +45,86 @@ export default function Header() {
 
       const handleSignOut = async () => {
         try {
-            const res = await fetch('/api/auth/signout', {
-                method: 'POST'
-            });
-    
-            const data = await res.json();
-            if (res.ok) {
-                dispatch(signOutSuccess(data));
-            } else {
-                console.log(data.message);
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will be logged out of your account!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sign out!',
+                cancelButtonText: 'Cancel!'
+              });
+          
+            if (result.isConfirmed) {
+                const res = await fetch('/api/auth/signout', {
+                    method: 'POST'
+                });
+        
+                const data = await res.json();
+                if (res.ok) {
+                    dispatch(signOutSuccess(data));
+                    toast.success('Sign out successful!');
+                    navigate('/sign-in');
+                } else {
+                    toast.error(data.message);
+                }
             }
-            
         } catch (error) {
-            console.log(error.message);
+            toast.error(error.message);
         }
     };
 
     const handleDelete = async () => {
         try {
-            dispatch(deleteStart());
-            const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
-                method: 'DELETE'
+            const firstResult = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Your account will be deleted!',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Delete it!',
+                cancelButtonText: 'Cancel!'
             });
-            const data = await res.json();
-            if (!res.ok) {
-                dispatch(deleteFailure(data.message));
-                return;
-            } else {
-                dispatch(deleteSuccess(data));
+            if (firstResult.isConfirmed) {
+                const secondResult = await Swal.fire({
+                    title: 'Type "YES" to confirm',
+                    input: 'text',
+                    inputPlaceholder: 'Type "YES"',
+                    inputAttributes: { autocomplete: 'off' },
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Confirm',
+                    cancelButtonText: 'Cancel!',
+                    preConfirm: (inputValue) => {
+                        if (inputValue.toLowerCase() !== 'yes') {
+                            Swal.showValidationMessage('You need to type "YES" to confirm');
+                        }
+                    }
+                });
+    
+                if (secondResult.isConfirmed && secondResult.value === 'yes') {
+                    dispatch(deleteStart());
+                    const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        dispatch(deleteFailure(data.message));
+                        toast.error(data.message);
+                        return;
+                    } else {
+                        dispatch(deleteSuccess(data));
+                        toast.success('Account has been deleted!');
+                        navigate('/sign-in');
+                    }
+                }
             }
         } catch (error) {
-            dispatch(deleteFailure(error.message))
+            dispatch(deleteFailure(error.message));
+            toast.error(error.message);
         }
     };
 
@@ -99,12 +150,7 @@ export default function Header() {
                 <Dropdown 
                 arrowIcon={true} 
                 inline
-                label={
-                    <div className="flex items-center gap-1 text-xl font-semibold">
-                        <MdAccountCircle className='text-2xl'/>
-                        <span >User</span>
-                    </div>
-                }>
+                label={ <MdAccountCircle className='text-3xl'/> }>
                     <Dropdown.Header>
                         <span className='block text-sm font-medium truncate'>{currentUser.email}</span>
                     </Dropdown.Header>

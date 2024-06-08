@@ -4,7 +4,8 @@ import { app } from '../firebase.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice.js';
-
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function OAuth() {
 
@@ -34,11 +35,13 @@ export default function OAuth() {
       
       if (res.ok) {
         dispatch(signInSuccess(data));
+        toast.success('Sign in successful!')
         navigate('/');
       }
       
     } catch (error) {
       dispatch(signInFailure(error.message));
+      toast.error(error.message);
     }
   }
 

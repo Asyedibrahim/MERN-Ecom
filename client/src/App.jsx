@@ -11,6 +11,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Product from './pages/Product';
 import Footer from './components/Footer';
 import CategoryProduct from './pages/CategoryProduct';
+import { ToastContainer } from 'react-toastify';
 
 
 export default function App() {
@@ -43,6 +44,8 @@ export default function App() {
       </Routes>
 
       <Footer />
+
+      <ToastContainer autoClose={3000} pauseOnHover={false}/>
 
     </BrowserRouter>
   )

@@ -3,12 +3,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function CreateCategory() {
 
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(null);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
@@ -24,7 +26,7 @@ export default function CreateCategory() {
       }
       fetchCategory();
     } catch (error) {
-      setError(error.message);
+      toast.error(error.message);
     }
   }, [setCategories])
 
@@ -49,34 +51,48 @@ export default function CreateCategory() {
       const data = await res.json();
       if (!res.ok) {
         setLoading(false);
-        setError(data.message);
+        toast.error(data.message);
       }
       if (res.ok) {
         setLoading(false);
-        setError(null);
+        toast.success('Category created!');
         navigate('/dashboard?tab=createProduct');
       }
 
     } catch (error) {
       setLoading(false);
-      setError(error.message);
+      toast.error(error.message);
     }
   };
 
   const handleDelete = async (categoryId) => {
     try {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'You want to delete this category!',
+        icon: 'error',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, Delete it!',
+        cancelButtonText: 'Keep it!'
+      });
+  
+    if (result.isConfirmed) {
       const res = await fetch(`/api/category/delete/${categoryId}`, {
         method: 'DELETE'
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message);
+        toast.error(data.message);
       }
       if (res.ok) {
         setCategories((prev) => prev.filter((category) => category._id !== categoryId));
+        toast.success('Category has been deleted!')
       }
+    }
     } catch (error) {
-      console.log(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -98,7 +114,8 @@ export default function CreateCategory() {
         });
         
         if (res.ok) {
-          setCategories((prev) => prev.map((category) => category._id === categoryId ? {...category, name: formValue} : category))
+          setCategories((prev) => prev.map((category) => category._id === categoryId ? {...category, name: formValue} : category));
+          toast.success('Category edited succesful!')
         }
       }
     }
@@ -127,7 +144,6 @@ export default function CreateCategory() {
             </button>
 
           </div>
-          {error && <p className='mt-3 text-red-600'>{error}</p>}
         </form>
 
         

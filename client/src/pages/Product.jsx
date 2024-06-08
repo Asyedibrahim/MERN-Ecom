@@ -3,6 +3,9 @@ import { useNavigate, useParams } from "react-router-dom"
 import { IoIosStar } from "react-icons/io";
 import { FaCartPlus, FaRegHeart } from "react-icons/fa";
 import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export default function Product() {
 
@@ -24,7 +27,7 @@ export default function Product() {
             
             fetchProduct();
         } catch (error) {
-            console.log(error.message);
+            toast.error(error.message);
         }
     },[setProduct]);
 
@@ -50,14 +53,15 @@ export default function Product() {
             });
             const data = await res.json()
             if (data.success === false) {
-                console.log(data.message);
+                toast.error(data.message);
                 return;
             }
             if (res.ok) {
+                toast.success('Product added to cart')
                 navigate('/cart');
             }
         } catch (error) {
-            console.log(error.message);
+            toast.error(error.message);
         }
     };
 

@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { HiArrowSmRight, HiUser } from 'react-icons/hi';
 import { TiDeleteOutline } from 'react-icons/ti';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AiFillProduct } from "react-icons/ai";
 import { Sidebar } from 'flowbite-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteFailure, deleteStart, deleteSuccess, signOutSuccess } from '../redux/user/userSlice.js';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 
 export default function DashSidebar() {
@@ -14,6 +17,7 @@ export default function DashSidebar() {
     const [tab, setTab] = useState('');
     const { currentUser } = useSelector((state) => state.user);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -27,37 +31,85 @@ export default function DashSidebar() {
 
     const handleSignOut = async () => {
         try {
-            const res = await fetch('/api/auth/signout', {
-                method: 'POST'
-            });
-    
-            const data = await res.json();
-            if (res.ok) {
-                dispatch(signOutSuccess(data));
-            } else {
-                console.log(data.message);
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You will be logged out of your account!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sign out!',
+                cancelButtonText: 'Cancel!'
+              });
+          
+            if (result.isConfirmed) {
+                const res = await fetch('/api/auth/signout', {
+                    method: 'POST'
+                });
+        
+                const data = await res.json();
+                if (res.ok) {
+                    dispatch(signOutSuccess(data));
+                    toast.success('Sign out successful!');
+                    navigate('/sign-in');
+                } else {
+                    toast.error(data.message);
+                }
             }
-            
         } catch (error) {
-            console.log(error.message);
+            toast.error(error.message);
         }
     };
 
     const handleDelete = async () => {
         try {
-            dispatch(deleteStart());
-            const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
-                method: 'DELETE'
+            const firstResult = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'Your account will be deleted!',
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, Delete it!',
+                cancelButtonText: 'Cancel!'
             });
-            const data = await res.json();
-            if (!res.ok) {
-                dispatch(deleteFailure(data.message));
-                return;
-            } else {
-                dispatch(deleteSuccess(data));
+            if (firstResult.isConfirmed) {
+                const secondResult = await Swal.fire({
+                    title: 'Type "YES" to confirm',
+                    input: 'text',
+                    inputPlaceholder: 'Type "YES"',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Confirm',
+                    cancelButtonText: 'Cancel!',
+                    preConfirm: (inputValue) => {
+                        if (inputValue.toLowerCase() !== 'yes') {
+                            Swal.showValidationMessage('You need to type "YES" to confirm');
+                        }
+                    }
+                });
+    
+                if (secondResult.isConfirmed && secondResult.value === 'yes') {
+                    dispatch(deleteStart());
+                    const res = await fetch(`/api/user/deleteUser/${currentUser._id}`, {
+                        method: 'DELETE'
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        dispatch(deleteFailure(data.message));
+                        toast.error(data.message);
+                        return;
+                    } else {
+                        dispatch(deleteSuccess(data));
+                        toast.success('Account has been deleted!');
+                        navigate('/sign-in');
+                    }
+                }
             }
         } catch (error) {
-            dispatch(deleteFailure(error.message))
+            dispatch(deleteFailure(error.message));
+            toast.error(error.message);
         }
     };
 
